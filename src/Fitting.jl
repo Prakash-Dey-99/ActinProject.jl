@@ -1,4 +1,3 @@
-using LsqFit, DataFrame, Statistics, StatsBase
 function fit_and_calculate(data::DataFrame, 
     x_col::Union{Symbol,String}, y_col::Union{Symbol,String}, 
     fit_func::Function,init_param::VecOrMat,
