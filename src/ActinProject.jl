@@ -1,6 +1,6 @@
 module ActinProject
 
-using LsqFit, DataFrame, Statistics, StatsBase
+using LsqFit, DataFrames, Statistics, StatsBase
 
 export fit_and_calculate
 
