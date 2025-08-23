@@ -1,0 +1,13 @@
+name = "ActinProject"
+uuid = "32c0ef3e-09b2-4acd-953f-1b93ecd196ef"
+authors = ["Prakash Dey <newprakash99@gmail.com>"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1.4"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
