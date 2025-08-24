@@ -5,7 +5,7 @@ function fit_and_calculate(data::DataFrame,
 
     fit = curve_fit(fit_func, data[!,x_col], data[!,y_col], init_param)
     rounded_params = round.(fit.param, digits = r_dig)
-    param_error = standard_errors(fit)
+    param_error = stderror(fit)
     rounded_param_error = round.(param_error, digits = r_dig)
     param_high = fit.param .+ param_error
     param_low = fit.param .- param_error
@@ -27,7 +27,7 @@ function fit_and_calculate(data::DataFrame,
     fit = curve_fit(fit_func, data[!,x_col], data[!,y_col],
     data_weight, init_param)
     rounded_params = round.(fit.param, digits = r_dig)
-    param_error = standard_errors(fit)
+    param_error = stderror(fit)
     rounded_param_error = round.(param_error, digits = r_dig)
     param_high = fit.param .+ param_error
     param_low = fit.param .- param_error
