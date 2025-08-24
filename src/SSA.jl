@@ -92,7 +92,7 @@ function ssa_N(trans_mat::AbstractMatrix{<:Real};
     for i in 1:N
         syst = (S=S_init, L=L_init, time = t_init)
         while syst.time < T_max
-            syst = step_n(syst, trans_mat)
+            syst = ssa_step(syst, trans_mat)
             L[i, T .>= syst.time] .= syst.L
             S[i, T .>= syst.time] .= syst.S
             if syst.S == 0
