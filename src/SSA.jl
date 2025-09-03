@@ -1,7 +1,8 @@
 struct Trajectory 
     S::Matrix{<:Real}
     L::Matrix{<:Real}
-    T::Vector{<:Real}
+    T_bin::Vector{<:Real}
+    T_final::Vector{<:Real}
 end
 
 struct TrajectoryMetrics
@@ -69,6 +70,7 @@ function ssa_N(trans_mat::AbstractMatrix{<:Real},
     T = collect(t_init:T_step:T_max)
     L = zeros(N,length(T)) .+ L_init;
     S = S_init .* ones(N,length(T));
+    TF = zeros(N)
     for i in 1:N
         syst = (S=S_init, L=L_init, time = t_init)
         while syst.time < T_max
@@ -76,11 +78,12 @@ function ssa_N(trans_mat::AbstractMatrix{<:Real},
             L[i, T .>= syst.time] .= syst.L
             S[i, T .>= syst.time] .= syst.S
             if syst.S == 0
+                TF[i] = syst.time
                 break
             end
         end
     end
-    return Trajectory(S,L,T)
+    return Trajectory(S,L,T,TF)
 end
 function ssa_N(trans_mat::AbstractMatrix{<:Real}; 
     T_max::Real = 1e2, L_init::Integer=0, t_init::Real = 0.0, 
@@ -89,6 +92,7 @@ function ssa_N(trans_mat::AbstractMatrix{<:Real};
     T = collect(t_init:T_step:T_max)
     L = zeros(N,length(T)) .+ L_init;
     S = S_init .* ones(N,length(T));
+    TF = zeros(N);
     for i in 1:N
         syst = (S=S_init, L=L_init, time = t_init)
         while syst.time < T_max
@@ -96,11 +100,12 @@ function ssa_N(trans_mat::AbstractMatrix{<:Real};
             L[i, T .>= syst.time] .= syst.L
             S[i, T .>= syst.time] .= syst.S
             if syst.S == 0
+                TF[i] = syst.time
                 break
             end
         end
     end
-    return Trajectory(S,L,T)
+    return Trajectory(S,L,T,TF)
 end
 
 function traj_metric(traj::Trajectory)::TrajectoryMetrics    
@@ -108,7 +113,7 @@ function traj_metric(traj::Trajectory)::TrajectoryMetrics
     L_var = var(traj.L, dims=1) |> vec;
     L_std = std(traj.L, dims=1) |> vec;
     L_CV = L_std ./ L_mean;
-    L_skw = [skewness(traj.L[:,i]) for i in 1:length(traj.T)]
+    L_skw = [skewness(traj.L[:,i]) for i in 1:length(traj.T_bin)]
     return TrajectoryMetrics(L_mean, L_var, L_std, L_CV, L_skw)
 end
 

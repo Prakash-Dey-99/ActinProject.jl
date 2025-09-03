@@ -31,7 +31,8 @@ using DataFrames, LsqFit
     @test typeof(traj) == Trajectory
     @test size(traj.S) == (5,21)
     @test size(traj.L) == (5,21)
-    @test length(traj.T) == 21
+    @test length(traj.T_bin) == 21
+    @test length(traj.T_final) == 5
 
     metrics = traj_metric(traj);
     @test typeof(metrics) == TrajectoryMetrics
